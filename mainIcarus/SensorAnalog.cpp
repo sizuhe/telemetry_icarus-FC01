@@ -1,10 +1,10 @@
 //-----LIBRARIES-----
-
 #include "SensorAnalog.h"
 #include <Arduino.h>
 
-//-----CLASSES AND METHODS-----
 
+
+//-----CLASSES AND METHODS-----
 SensorAnalog::SensorAnalog(int pinvcc, unsigned long sampleinterval) {
   this->pinvcc = pinvcc;
   interval = sampleinterval;

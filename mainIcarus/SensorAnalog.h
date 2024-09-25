@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 
+
+
 class SensorAnalog {
   private:
     int pinvcc;

@@ -1,10 +1,10 @@
 //-----LIBRARIES-----
 #include "GPSsensor.h"
 
+
+
 //-----CLASSES AND METHODS-----
-GPSsensor::GPSsensor() {
- 
-}
+GPSsensor::GPSsensor() {}
 
 void GPSsensor::update() {
   while (Serial.available() > 0) {  

@@ -4,6 +4,8 @@
 #include <TinyGPS++.h>
 #include <Arduino.h>
 
+
+
 class GPSsensor {
   private:
     TinyGPSPlus gps; 

@@ -4,13 +4,14 @@
 #include <Wire.h>
 #include <Arduino.h>
 
-//-----CLASSES AND METHODS-----
 
+
+//-----CLASSES AND METHODS-----
 IMUsensor::IMUsensor() : mpu() {}
 
 void IMUsensor::start() {
     Wire.begin();
-    mpu.initialize(); //-----INITIALIZE THE MPU6050 SENSOR-----
+    mpu.initialize();
     if (mpu.testConnection()) {
         Serial.println("MPU6050 successfully connected");
     } else {
@@ -27,11 +28,9 @@ void IMUsensor::readData() {
 float IMUsensor::readAx() {
   return ax;
 }
-
 float IMUsensor::readAy() {
   return ay;
 }
-
 float IMUsensor::readAz() {
   return az;
 }
@@ -39,11 +38,9 @@ float IMUsensor::readAz() {
 float IMUsensor::readGx(){
   return gx;
 }
-
 float IMUsensor::readGy(){
   return gy;
 }
-
 float IMUsensor::readGz(){
   return gz;
 }
