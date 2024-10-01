@@ -16,8 +16,18 @@ void GPSsensor::update() {
 }
 
 void GPSsensor::printLocation() {
-  Serial.print("Latitude= ");
-  Serial.print(gps.location.lat(), 6);
-  Serial.print(" Longitude= ");
-  Serial.println(gps.location.lng(), 6);
+  lat = gps.location.lat();
+  lng = gps.location.lng();
+
+  //Serial.print("Latitude= ");
+  //Serial.print(gps.location.lat(), 6);
+  //Serial.print(" Longitude= ");
+  //Serial.println(gps.location.lng(), 6);
+}
+
+float GPSsensor::readLat(){
+  return lat;
+}
+float GPSsensor::readLng(){
+  return lng;
 }
