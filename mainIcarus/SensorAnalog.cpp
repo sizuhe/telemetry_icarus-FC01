@@ -28,6 +28,7 @@ void SensorAnalog::Readvoltage() {
   //Serial.print("Current voltage is: "); Serial.print(voltage); Serial.print("V"); 
 }
 
-float SensorAnalog::volt(){
-  return voltage;
+String SensorAnalog::readVoltage(){
+  String Data = String(voltage)+",";
+  return Data;
 }

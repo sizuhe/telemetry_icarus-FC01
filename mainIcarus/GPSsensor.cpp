@@ -10,12 +10,12 @@ void GPSsensor::update() {
   while (Serial.available() > 0) {  
     gps.encode(Serial.read());      
     if (gps.location.isUpdated()) {  
-      printLocation();               
+      readData();               
     }
   }
 }
 
-void GPSsensor::printLocation() {
+void GPSsensor::readData() {
   lat = gps.location.lat();
   lng = gps.location.lng();
 
@@ -25,9 +25,11 @@ void GPSsensor::printLocation() {
   //Serial.println(gps.location.lng(), 6);
 }
 
-float GPSsensor::readLat(){
-  return lat;
+String GPSsensor::readLat(){
+  String packet = String(lat)+",";
+  return packet;
 }
-float GPSsensor::readLng(){
-  return lng;
+String GPSsensor::readLng(){
+  String packet = String(lng)+",";
+  return packet;
 }

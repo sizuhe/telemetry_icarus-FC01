@@ -11,8 +11,7 @@ class BMP180Sensor {
         BMP180Sensor();  
         void start();    
         void readData();
-        float readTemp();
-        float readPres(); 
+        String readValues();
         
     private:
         Adafruit_BMP085 bmp;

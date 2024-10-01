@@ -15,9 +15,9 @@ class GPSsensor {
   public:
     GPSsensor();  
     void update();  
-    void printLocation();
-    float readLat();
-    float readLng();
+    void readData();
+    String readLat();
+    String readLng();
 };
 
 #endif

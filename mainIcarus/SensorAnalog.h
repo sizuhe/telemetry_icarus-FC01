@@ -16,7 +16,7 @@ class SensorAnalog {
     SensorAnalog(int pinvcc, unsigned long sampleinterval);
     void update();
     void Readvoltage();
-    float volt();
+    String readVoltage();
    
 };
 

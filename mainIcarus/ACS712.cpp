@@ -14,10 +14,10 @@ void ACS712::begin() {
 }
 
 
-float ACS712::getCurrent() {
+String ACS712::readCurrent() {
     int rawValue = analogRead(_pin); 
     float voltage = (rawValue / (float)ADC_RES) * VREF; 
     float offsetVoltage = VREF / 2; 
     float current = (voltage - offsetVoltage) / (_sensitivity / 1000.0); 
-    return current;
+    return String(current);
 }

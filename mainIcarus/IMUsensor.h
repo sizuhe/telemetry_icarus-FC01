@@ -11,12 +11,9 @@ class IMUsensor {
         IMUsensor();
         void start();
         void readData();
-        float readAx();
-        float readAy();
-        float readAz();
-        float readGx();
-        float readGy();
-        float readGz();
+        String readAccel();
+        String readGyro();
+
         
     private:
         MPU6050 mpu;

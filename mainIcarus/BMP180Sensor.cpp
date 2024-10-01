@@ -26,10 +26,7 @@ void BMP180Sensor::readData() {
 }
 
 //-----READ TEMPERATURE AND PRESSURE -----
-float BMP180Sensor::readTemp(){
-  return temperature;
-}
-
-float BMP180Sensor::readPres(){
-  return pressure;
+String BMP180Sensor::readValues(){
+  String Data = String(temperature)+"," + String(pressure)+",";
+  return Data;
 }

@@ -25,22 +25,13 @@ void IMUsensor::readData() {
 }
 
 //-----READ ACCELERATION AND GYRO-----
-float IMUsensor::readAx() {
-  return ax;
-}
-float IMUsensor::readAy() {
-  return ay;
-}
-float IMUsensor::readAz() {
-  return az;
+String IMUsensor::readAccel() {
+  String packet = String(ax)+","+ String(ay)+"," + String(az)+",";
+  return packet;
 }
 
-float IMUsensor::readGx(){
-  return gx;
-}
-float IMUsensor::readGy(){
-  return gy;
-}
-float IMUsensor::readGz(){
-  return gz;
+String IMUsensor::readGyro(){
+  String packet = String(gx)+","+ String(gy)+"," + String(gz)+",";
+  return packet;
+
 }

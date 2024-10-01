@@ -11,7 +11,7 @@ public:
     
     ACS712(uint8_t pin, float sensitivity);
     void begin();
-    float getCurrent();
+    String readCurrent();
 
 private:
     uint8_t _pin;           

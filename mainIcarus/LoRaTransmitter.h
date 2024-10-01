@@ -21,8 +21,7 @@
 class LoRaTransmitter {
 public:
     void setup();
-    void loop();
-
+    void sendData(String Data);
 private:
     void initLoRa();
 };
