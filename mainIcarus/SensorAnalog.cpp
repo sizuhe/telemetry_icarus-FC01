@@ -25,5 +25,9 @@ void SensorAnalog::Readvoltage() {
   int readvoltage = analogRead(pinvcc);
   voltage = readvoltage * (25.0 / 1023.0);
   //-----PRINT DATA ON SERIAL MONITOR-----
-  Serial.print("Current voltage is: "); Serial.print(voltage); Serial.print("V");
+  //Serial.print("Current voltage is: "); Serial.print(voltage); Serial.print("V"); 
+}
+
+float SensorAnalog::volt(){
+  return voltage;
 }

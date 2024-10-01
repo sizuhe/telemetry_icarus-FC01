@@ -8,12 +8,16 @@
 
 class GPSsensor {
   private:
-    TinyGPSPlus gps; 
+    TinyGPSPlus gps;
+    float lat;
+    float lng; 
 
   public:
     GPSsensor();  
     void update();  
-    void printLocation();  
+    void printLocation();
+    float readLat();
+    float readLng();
 };
 
 #endif
