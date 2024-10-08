@@ -57,10 +57,11 @@ void ledLoop() {
 
 void loop() {
   // BMP IS SLOW AS FUCK
-  // Envio de datos en menos de 1 seg
+  // Enviar de datos en menos de 1 seg (se envian cada seg)
   
   // String dataBMP = sensorBMP.readData();
 
+  // ----- UNSTABLE WAY -----
   sensorCurrent.processData();
   // sensorBMP.processData();
   sensorVoltage.processData();
@@ -82,7 +83,7 @@ void loop() {
   }
 
   String dataCurrent = sensorCurrent.readData();
-  // String dataAccel = sensorIMU.readDataAccel() + sensorIMU.readDataGyro();
+  String dataAccel = sensorIMU.readDataAccel();
   String dataVoltage = sensorVoltage.readData();
 
   String dataPacket = dataCurrent + dataVoltage + dataGPS;

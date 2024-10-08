@@ -18,7 +18,7 @@ class BMP180 {
       
 
   private:
-    float temperature, pressure;
+    float pressure;
 
     Adafruit_BMP085 bmp;
 };

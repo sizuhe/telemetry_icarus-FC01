@@ -2,7 +2,7 @@
 
 
 
-BMP180::BMP180() : temperature(0.0), pressure(0.0) {}
+BMP180::BMP180() : pressure(0.0) {}
 
 
 void BMP180::init() {
@@ -18,13 +18,12 @@ void BMP180::init() {
 
 // Get read data from library functions
 void BMP180::processData() {
-  temperature = bmp.readTemperature();
   pressure = bmp.readAltitude();
 }
 
 
 String BMP180::readData() {
-  String data = String(temperature) + "," + String(pressure) + ",";
+  String data = String(pressure) + ",";
 
   return data;
 }
