@@ -1,7 +1,12 @@
+/*
+BMP180 I2C Address: 0x77 
+*/
+
 #ifndef BMP180_H
 #define BMP180_H
 
 #include <Arduino.h>
+#include <Wire.h>
 #include <Adafruit_BMP085.h>
 
 
@@ -11,16 +16,15 @@ class BMP180 {
     BMP180();
 
     void init();
-    void processData();
-    String readData();
-
-    bool isInit;
+    String processData();
       
 
   private:
-    float pressure;
+    int16_t read16(uint8_t reg);
 
-    Adafruit_BMP085 bmp;
+    uint32_t AC5, AC6;
+    int32_t MC, MD;
+    float temperature;
 };
 
 #endif

@@ -2,8 +2,7 @@
 #define MPU6050_CUSTOM_H
 
 #include <Arduino.h>
-#include <Adafruit_MPU6050.h>
-#include <Adafruit_Sensor.h>
+#include "MPU6050.h"
 
 
 
@@ -12,18 +11,15 @@ class MPU6050_Custom {
     MPU6050_Custom();
 
     void init();
-    void processData();
-    String readDataAccel();
-    String readDataGyro();
+    String processData();
 
     bool isInit;
 
       
   private:
+    int16_t axRead, ayRead, azRead;
     float ax, ay, az;
-    float gx, gy, gz;
-
-    Adafruit_MPU6050 mpu;
+    MPU6050 mpu;
 };
 
 #endif

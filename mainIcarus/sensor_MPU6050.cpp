@@ -1,49 +1,38 @@
 #include "sensor_MPU6050.h"
 
+const float RANGE_G = 2.0;
+const float FACTOR_CONVERSION = RANGE_G / (pow(2, 16) / 2.0);
+
 
 
 MPU6050_Custom::MPU6050_Custom() : mpu() {}
 
 
 void MPU6050_Custom::init() {
-  if (!mpu.begin()) {
+  mpu.initialize();
+  if (!mpu.testConnection()){
     isInit = 0;
   } else {
     isInit = 1;
   }
 
-  mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
-  mpu.setGyroRange(MPU6050_RANGE_500_DEG);
-  mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
+  /* ----- CALIBRATION VARIABLES ----- */
+  mpu.setXAccelOffset(1317);
+  mpu.setYAccelOffset(-81);
+  mpu.setZAccelOffset(1147);
 
   delay(20);
 }
 
 
 // Get read data from library functions
-void MPU6050_Custom::processData() {
-  sensors_event_t a, g, temp;
-  mpu.getEvent(&a, &g, &temp);
+String MPU6050_Custom::processData() {
+  mpu.getAcceleration(&axRead, &ayRead, &azRead);
 
-  ax = a.acceleration.x;
-  ay = a.acceleration.y;
-  az = a.acceleration.z;
+  ax = axRead * FACTOR_CONVERSION;
+  ay = ayRead * FACTOR_CONVERSION;
+  az = azRead * FACTOR_CONVERSION;
 
-  gx = g.gyro.x;
-  gy = g.gyro.y;
-  gz = g.gyro.z;
-}
-
-
-String MPU6050_Custom::readDataAccel() {
   String data = String(ax) + "," + String(ay) + "," + String(az) + ",";
-
-  return data;
-}
-
-
-String MPU6050_Custom::readDataGyro(){
-  String data = String(gx) + "," + String(gy) + "," + String(gz) + ",";
-
   return data;
 }

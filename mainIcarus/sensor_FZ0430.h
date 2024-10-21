@@ -11,16 +11,14 @@ class FZ0430 {
     FZ0430(uint8_t pin, float vmax);
 
     void init();
-    void processData();
-    String readData();
+    String processData();
 
 
   private:
     static const float _ADC_RES;
     const uint8_t _PIN;
     const float _VMAX, _FACTOR;
-
-    float voltage; 
+    float voltage;
 };
 
 #endif

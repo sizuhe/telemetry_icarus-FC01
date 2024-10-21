@@ -24,14 +24,9 @@ class NEO6M {
     const int _BAUDRATE_GPS, _PIN_RX_ARDUINO, _PIN_TX_ARDUINO;
 
     struct GPSData {
-      char time[10];
+      char time[7];
       char latitude[11];
-      char latitudeDir;
       char longitude[12];
-      char longitudeDir;
-      char altitude[7];
-      char altitudeMSL[7];
-      char speedGround[7];
     };
 
     GPSData dataGPS;

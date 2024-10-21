@@ -15,13 +15,9 @@ void FZ0430::init() {
 }
 
 
-void FZ0430::processData() {
+String FZ0430::processData() {
   voltage = analogRead(_PIN) * _FACTOR;
-}
 
-
-String FZ0430::readData(){
   String data = String(voltage) + ",";
-
   return data;
 }

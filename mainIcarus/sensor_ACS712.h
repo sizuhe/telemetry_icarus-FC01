@@ -12,16 +12,15 @@ class ACS712 {
     ACS712(uint8_t pin, float sensitivity, float vref);
 
     void init();
-    void processData();
-    String readData();
+    String processData();
 
 
   private:
     static const float _ADC_RES;
     const uint8_t _PIN;
     const float _VREF, _VMID, _SENSITIVITY, _FACTOR;
-
-    float current; 
+    int rawValue;
+    float current, voltage;
 };
 
 #endif

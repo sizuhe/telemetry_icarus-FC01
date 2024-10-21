@@ -17,14 +17,15 @@ void NEO6M::init() {
 
 
 void NEO6M::decodeGPSdata(char* packet) {
-  sscanf(packet, 
-    "$GPGGA,%9[^,],%10[^,],%c,%11[^,],%c,%*[^,],%*[^,],%*[^,],%6[^,],%*[^,],%6[^,]",
-    dataGPS.time, dataGPS.latitude, &dataGPS.latitudeDir,
-    dataGPS.longitude, &dataGPS.longitudeDir, dataGPS.altitude, dataGPS.altitudeMSL);
+  char tempTime[9];
 
   sscanf(packet, 
-    "$GPRMC,%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%6[^,]",
-    dataGPS.speedGround);
+    "$GPGGA,%9[^,],%10[^,],%*[^,],%11[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,],%*[^,]",
+    tempTime, dataGPS.latitude, dataGPS.longitude);
+
+  // As Time is read as a String, it must be changed accordingly using strncpy
+  strncpy(dataGPS.time, tempTime, 7);
+  dataGPS.time[6] = '\0';
 }
 
 
@@ -42,15 +43,13 @@ void NEO6M::processData() {
       dataPacket[index] = '\0';   // Termination character
       index = 0;
 
-      decodeGPSdata(dataPacket);
-
+      decodeGPSdata(dataPacket);    // Decode NMEA sentences
+      
       if (strncmp(dataPacket, "$GPGGA", 6) == 0) {
         isNew = true;
-        data = String(dataGPS.time) + "," + String(dataGPS.latitude) + "," + String(dataGPS.latitudeDir) + "," + 
-          String(dataGPS.longitude) + "," + String(dataGPS.longitudeDir) + "," + String(dataGPS.altitude) + "," + 
-          String(dataGPS.altitudeMSL) + "," + String(dataGPS.speedGround);
-
-        // break;
+        data = String(dataGPS.time) + "," + String(dataGPS.latitude) + "," + 
+          String(dataGPS.longitude);
+        break;
       }
     }
   }

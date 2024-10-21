@@ -1,21 +1,37 @@
+/* ----- CURRENT PROBLEMS -----
+- String concatenation can affect the code speed as there are many concatenations 
+on different functions.
+- BMP and IMU functions delay the code a little bit, this affects the GPS
+clock so it resets when the offset gets bigger. This is why delays shouldnt 
+be used before or after the GPS function.
+- LoRa also delays the code but it's harder to make it faster.
+
+----- SOLUTIONS -----
+- Use char instead of Strings to create the dataPacket.
+- Change IMU function to use Wire library therefore making it faster.
+- Sending data every second (as GPS updates).
+- Not using GPS data. */
+
+#include <LoRa.h>
+#include <SPI.h>
 #include "sensor_ACS712.h"
 #include "sensor_BMP180.h"
 #include "sensor_FZ0430.h"
 #include "sensor_MPU6050.h"
 #include "sensor_NEO6M.h"
-#include "transmitter_LoRa.h"
 
+#define LORA_FREQ 433E6
 #define PIN_LED_GREEN 8
 #define PIN_LED_RED 7
 
-String dataGPS = "0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0";
+int time;
+String dataCurrent, dataBMP, dataVoltage, dataAccel, dataGPS, dataPacket;
 
 ACS712 sensorCurrent(A1, 100, 5.0);
 BMP180 sensorBMP;
 FZ0430 sensorVoltage(A0, 25.0); 
 MPU6050_Custom sensorIMU;
 NEO6M sensorGPS(4, 3, 9600);
-// LoRaTransmitter LoRaTransmit;
 
 
 
@@ -26,67 +42,110 @@ void setup() {
   pinMode(PIN_LED_RED, OUTPUT);
 
   sensorCurrent.init();
-  // sensorBMP.init();
+  sensorBMP.init();
   sensorVoltage.init();
   sensorIMU.init();
   sensorGPS.init();
 
-  // if (!sensorBMP.isInit) {
-  //   ledLoop();
-  //   while(1);
-  // }
+  // Loop for GPS triangulation before sending data
+  while (1) {
+    digitalWrite(PIN_LED_RED, HIGH);
+
+    sensorGPS.processData();
+    if (sensorGPS.data.length() > 20) {
+      digitalWrite(PIN_LED_RED, LOW);
+      break;
+    }
+  }
+
+  ledLoopGREEN(1000);
+
+  if (!LoRa.begin(LORA_FREQ)) {
+    ledLoopRED(500);
+    while(1);
+  } else {
+    LoRa.setSpreadingFactor(7);
+    LoRa.setSignalBandwidth(500E3);
+  }
+
   if (!sensorIMU.isInit) {
-    ledLoop();
-    ledLoop();
+    ledLoopRED(500);
+    ledLoopRED(500);
     while(1);
   }
 
-  digitalWrite(PIN_LED_GREEN, HIGH);
-  delay(1000);
-  digitalWrite(PIN_LED_GREEN, LOW);
+  ledLoopGREEN(250);
+  ledLoopGREEN(250);
+  ledLoopGREEN(250);
+
+  // Data type size optimization
+  dataCurrent.reserve(7);
+  dataBMP.reserve(7);
+  dataVoltage.reserve(6);
+  dataAccel.reserve(16);
+  dataGPS.reserve(30);
+  dataPacket.reserve(66);
 }
 
-void ledLoop() {
+void ledLoopRED(int speed) {
   digitalWrite(PIN_LED_RED, HIGH);
-  delay(500);
+  delay(speed);
   digitalWrite(PIN_LED_RED, LOW);
-  delay(500);
+  delay(speed);
+}
+
+void ledLoopGREEN(int speed) {
+  digitalWrite(PIN_LED_GREEN, HIGH);
+  delay(speed);
+  digitalWrite(PIN_LED_GREEN, LOW);
+  delay(speed);
 }
 
 /* -------------------------------------------------- */
 
 void loop() {
-  // BMP IS SLOW AS FUCK
-  // Enviar de datos en menos de 1 seg (se envian cada seg)
+  /* ----- TIMES FOR EVERY CODE [min - max] -----
+  - processData / readData / allFunctions / globalVariables: 8 ms - 80 ms
+  - processData / readData / -BMP / -IMU / globalVariables: 7 ms - 54 ms
+  - processData / allFunctions / localVariables: 8 ms - 83 ms
+  - processData / globalVariables: 9 ms - 66 ms
+
+  - String dataPacket: 6 ms
+  - Serial.println(dataGPS): 5 ms
+  - dataPacket to Serial.println(dataGPS): 9 ms
+  - dataPacket to Serial.println(dataPacket): 12 ms
+
+  - dataPacket memory reserved: 5 ms
+  - dataPacket memory not reserved: 6 ms
+
+  - All process data funcions: 73 ms
+  - All process data funcions / -GPS: 48 ms -- LoRa works great with this config --
+  - All process data funcions / -BMP: 39 ms
+  - All process data funcions / -IMU: 39 ms
+  - All process data funcions / -IMU / -BMP: 31 ms
   
-  // String dataBMP = sensorBMP.readData();
+  Its not recommeded to use delays before or after the GPS code because it slows the
+  GPS clock and forces it to reset.*/
 
-  // ----- UNSTABLE WAY -----
-  sensorCurrent.processData();
-  // sensorBMP.processData();
-  sensorVoltage.processData();
-  sensorIMU.processData();
-  
-  sensorGPS.processData();
-  if (sensorGPS.isNew) {
-    dataGPS = sensorGPS.data;
+  // long time0 = millis();
 
-    // ----- BELOW IS THE MOST STABLE WAY -----
-    // If sensors are read here it doesnt hang up
-    // String dataCurrent = sensorCurrent.readData();
-    // String dataAccel = sensorIMU.readDataAccel() + sensorIMU.readDataGyro();
-    // String dataVoltage = sensorVoltage.readData();
+  dataCurrent = sensorCurrent.processData();    // Max time taken: 5 ms
+  dataBMP = sensorBMP.processData();    // Max time taken: 21 ms
+  dataVoltage = sensorVoltage.processData();    // Max time taken: 5 ms
+  dataAccel = sensorIMU.processData();    // Max time taken: 21 ms
+  sensorGPS.processData();    // Max time taken: 26 ms
 
-    // String dataPacket = dataCurrent + dataAccel + dataVoltage + sensorGPS.data;
+  dataGPS = sensorGPS.isNew ? sensorGPS.data : dataGPS;   // Max time taken: 1 ms
 
-    // Serial.println(dataPacket);
-  }
+  dataPacket = dataCurrent + dataVoltage + dataBMP + dataAccel + dataGPS;    // Max time taken: 5 ms (reserved) - 6 ms (not reserved)
 
-  String dataCurrent = sensorCurrent.readData();
-  String dataAccel = sensorIMU.readDataAccel();
-  String dataVoltage = sensorVoltage.readData();
+  LoRa.beginPacket();
+  LoRa.print(dataPacket);
+  LoRa.endPacket();
 
-  String dataPacket = dataCurrent + dataVoltage + dataGPS;
-
-  Serial.println(dataPacket);
+  // Serial.println(dataPacket);
+  /* -----DEBUGGING ----- */
+  // int time1 = millis() - time0;
+  // time = time1 > time ? time1 : time;
+  // Serial.println(time);
 }
