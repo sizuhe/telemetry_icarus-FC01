@@ -3,23 +3,42 @@
 
 #include <Arduino.h>
 #include "MPU6050.h"
+#include <Wire.h>
 
+/*---------LAST CODE---------*/
 
+//class MPU6050_Custom {
+//  public:
+//    MPU6050_Custom();
+
+//    void init();
+//    String processData();
+
+//    bool isInit;
+
+      
+//  private:
+//    int16_t axRead, ayRead, azRead;
+//    float ax, ay, az;
+//    MPU6050 mpu;
+//};
+
+//#endif
+
+#define MPU6050_ADDRESS 0x68
+#define MPU6050_ACCEL_XOUT_H 0x3B
+#define MPU_PWR_MGMT_1 0x6B
 
 class MPU6050_Custom {
   public:
-    MPU6050_Custom();
+  MPU6050_Custom();
 
-    void init();
-    String processData();
+  void init();
+  void readAccel(int16_t &ax, int_16t &ay, int_16t &az);
 
-    bool isInit;
-
-      
   private:
-    int16_t axRead, ayRead, azRead;
-    float ax, ay, az;
-    MPU6050 mpu;
+  int16_t readRegister16(int reg);
+
 };
 
 #endif
