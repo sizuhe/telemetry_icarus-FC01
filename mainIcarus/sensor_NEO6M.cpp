@@ -34,7 +34,7 @@ void NEO6M::processData() {
   char dataPacket[82];
   isNew = false;
 
-  while (GPS_Serial.available() > 0) {
+  if (GPS_Serial.available() > 0) {
     char GPS_packet = GPS_Serial.read();
 
     if (GPS_packet != '\n') {
@@ -49,7 +49,7 @@ void NEO6M::processData() {
         isNew = true;
         data = String(dataGPS.time) + "," + String(dataGPS.latitude) + "," + 
           String(dataGPS.longitude);
-        break;
+        // break;
       }
     }
   }

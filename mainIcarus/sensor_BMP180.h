@@ -7,7 +7,6 @@ BMP180 I2C Address: 0x77
 
 #include <Arduino.h>
 #include <Wire.h>
-#include <Adafruit_BMP085.h>
 
 
 

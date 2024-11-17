@@ -1,13 +1,13 @@
 /* ----- CURRENT PROBLEMS -----
 - String concatenation can affect the code speed as there are many concatenations 
 on different functions.
-- BMP and IMU functions delay the code a little bit, this affects the GPS
+- BMP and IMU functions delay the code a little bit, this affects the GPS.
 clock so it resets when the offset gets bigger. This is why delays shouldnt 
 be used before or after the GPS function.
 - LoRa also delays the code but it's harder to make it faster.
 
 ----- SOLUTIONS -----
-- Use char instead of Strings to create the dataPacket.
+- Use char instead of String to create the dataPacket.
 - Change IMU function to use Wire library therefore making it faster.
 - Sending data every second (as GPS updates).
 - Not using GPS data. */
@@ -60,13 +60,13 @@ void setup() {
 
   ledLoopGREEN(1000);
 
-  if (!LoRa.begin(LORA_FREQ)) {
-    ledLoopRED(500);
-    while(1);
-  } else {
-    LoRa.setSpreadingFactor(7);
-    LoRa.setSignalBandwidth(500E3);
-  }
+  // if (!LoRa.begin(LORA_FREQ)) {
+  //   ledLoopRED(500);
+  //   while(1);
+  // } else {
+  //   LoRa.setSpreadingFactor(7);
+  //   LoRa.setSignalBandwidth(500E3);
+  // }
 
   if (!sensorIMU.isInit) {
     ledLoopRED(500);
@@ -139,11 +139,11 @@ void loop() {
 
   dataPacket = dataCurrent + dataVoltage + dataBMP + dataAccel + dataGPS;    // Max time taken: 5 ms (reserved) - 6 ms (not reserved)
 
-  LoRa.beginPacket();
-  LoRa.print(dataPacket);
-  LoRa.endPacket();
+  // LoRa.beginPacket();
+  // LoRa.print(dataPacket);
+  // LoRa.endPacket();
 
-  // Serial.println(dataPacket);
+  Serial.println(dataPacket);
   /* -----DEBUGGING ----- */
   // int time1 = millis() - time0;
   // time = time1 > time ? time1 : time;
